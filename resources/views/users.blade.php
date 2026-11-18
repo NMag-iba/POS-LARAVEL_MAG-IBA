@@ -27,6 +27,21 @@
         nav a {
             margin: 0 10px;
         }
+
+        .add-user {
+            display: block;
+            width: fit-content;
+            margin: 20px auto;
+            padding: 8px 15px;
+            border: 1px solid #767676;
+            background-color: #efefef;
+            color: black;
+            text-decoration: none;
+        }
+
+        .add-user:hover {
+            background-color: #dcdcdc;
+        }
     </style>
 </head>
 <body>
@@ -40,12 +55,18 @@
         <a href="{{ route('users') }}">User Accounts</a>
     </nav>
 
+    <a class="add-user" href="{{ route('users.create') }}">
+        Add User
+    </a>
+
     <table>
         <thead>
             <tr>
                 <th>Username</th>
                 <th>Full Name</th>
                 <th>Role</th>
+                <th>Avatar</th>
+                <th>Actions</th>
             </tr>
         </thead>
 
@@ -55,10 +76,30 @@
                     <td>{{ $user->username }}</td>
                     <td>{{ $user->full_name }}</td>
                     <td>{{ $user->role }}</td>
+
+                    <td>
+                        @if ($user->avatar)
+                            <img src="{{ asset('storage/' . $user->avatar) }}"
+                                alt="{{ $user->full_name }} avatar"
+                                width="80">
+                        @else
+                            No avatar
+                        @endif
+                    </td>
+
+                    <td>
+                        <a href="{{ route('users.edit', $user) }}">Edit</a>
+                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+    
+    @if (session('success'))
+        <p style="text-align: center;">
+            {{ session('success') }}
+        </p>
+    @endif
 
 </body>
 </html>

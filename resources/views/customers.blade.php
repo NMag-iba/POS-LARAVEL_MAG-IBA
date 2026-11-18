@@ -27,6 +27,17 @@
         nav a {
             margin: 0 10px;
         }
+
+        .add-customer {
+            display: block;
+            width: fit-content;
+            margin: 20px auto;
+            padding: 8px 15px;
+            border: 1px solid #767676;
+            background-color: #efefef;
+            color: black;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -40,12 +51,17 @@
         <a href="{{ route('users') }}">User Accounts</a>
     </nav>
 
+    <a class="add-customer" href="{{ route('customers.create') }}">
+        Add Customer
+    </a>
+
     <table>
         <thead>
             <tr>
                 <th>Full Name</th>
                 <th>Email</th>
                 <th>Phone</th>
+                <th>Actions</th>
             </tr>
         </thead>
 
@@ -55,10 +71,19 @@
                     <td>{{ $customer->full_name }}</td>
                     <td>{{ $customer->email }}</td>
                     <td>{{ $customer->phone }}</td>
+                    <td>
+                        <a href="{{ route('customers.edit', $customer) }}">Edit</a>
+                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+
+    @if (session('success'))
+        <p style="text-align: center;">
+            {{ session('success') }}
+        </p>
+    @endif
 
 </body>
 </html>
