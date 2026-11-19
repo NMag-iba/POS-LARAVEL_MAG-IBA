@@ -1,40 +1,35 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
 
-Route::get('/', [PageController::class, 'index'])->name('home');
+Route::get('/', [PageController::class, 'index'])
+    ->name('home');
 
-Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/about', [PageController::class, 'about'])
+    ->name('about');
 
-//Customers
-Route::get('/customers', [CustomerController::class, 'index'])
-    ->name('customers');
-Route::get('/customers/create', [CustomerController::class, 'create'])
-    ->name('customers.create');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::post('/customers', [CustomerController::class, 'store'])
-    ->name('customers.store');
+Route::middleware('auth')->group(function () {
 
-Route::get('/customers/{customer}/edit', [CustomerController::class, 'edit'])
-    ->name('customers.edit');
+    Route::resource('customers', CustomerController::class);
 
-Route::patch('/customers/{customer}', [CustomerController::class, 'update'])
-    ->name('customers.update');
+    Route::resource('users', UserController::class);
 
-//Users
-Route::get('/users', [UserController::class, 'index'])
-    ->name('users');
-Route::get('/users/create', [UserController::class, 'create'])
-    ->name('users.create');
+    Route::get('/profile', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
 
-Route::post('/users', [UserController::class, 'store'])
-    ->name('users.store');
+    Route::patch('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
 
-Route::get('/users/{user}/edit', [UserController::class, 'edit'])
-    ->name('users.edit');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])
+        ->name('profile.destroy');
+});
 
-Route::patch('/users/{user}', [UserController::class, 'update'])
-    ->name('users.update');
+require __DIR__.'/auth.php';

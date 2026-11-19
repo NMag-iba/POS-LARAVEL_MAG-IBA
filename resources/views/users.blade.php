@@ -42,8 +42,28 @@
         .add-user:hover {
             background-color: #dcdcdc;
         }
+
+        .delete-form {
+            display: inline;
+        }
+
+        .delete-button {
+            border: none;
+            background: none;
+            color: red;
+            cursor: pointer;
+            padding: 0;
+            font-size: 14px;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+        }
     </style>
 </head>
+
 <body>
 
     <h1>User Accounts</h1>
@@ -51,8 +71,28 @@
     <nav>
         <a href="{{ route('home') }}">Home</a>
         <a href="{{ route('about') }}">About</a>
-        <a href="{{ route('customers') }}">Customer Accounts</a>
-        <a href="{{ route('users') }}">User Accounts</a>
+        <a href="{{ route('customers.index') }}">Customer Accounts</a>
+        <a href="{{ route('users.index') }}">User Accounts</a>
+        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+        @csrf
+
+        <button
+            type="submit"
+            style="
+                margin-left: 10px;
+                border: none;
+                background: none;
+                color: #0000ee;
+                text-decoration: underline;
+                cursor: pointer;
+                font-size: 16px;
+                font-family: inherit;
+                font-size: inherit;
+            "
+        >
+            Log Out
+        </button>
+    </form>
     </nav>
 
     <a class="add-user" href="{{ route('users.create') }}">
@@ -79,24 +119,53 @@
 
                     <td>
                         @if ($user->avatar)
-                            <img src="{{ asset('storage/' . $user->avatar) }}"
+                            <img
+                                class="avatar"
+                                src="{{ asset('storage/' . $user->avatar) }}"
                                 alt="{{ $user->full_name }} avatar"
-                                width="80">
+                            >
                         @else
                             No avatar
                         @endif
                     </td>
 
                     <td>
-                        <a href="{{ route('users.edit', $user) }}">Edit</a>
+                        <a href="{{ route('users.show', $user) }}">
+                            View
+                        </a>
+
+                        |
+
+                        <a href="{{ route('users.edit', $user) }}">
+                            Edit
+                        </a>
+
+                        |
+
+                        <form
+                            class="delete-form"
+                            method="POST"
+                            action="{{ route('users.destroy', $user) }}"
+                        >
+                            @csrf
+                            @method('DELETE')
+
+                            <button
+                                class="delete-button"
+                                type="submit"
+                                onclick="return confirm('Delete this user?')"
+                            >
+                                Delete
+                            </button>
+                        </form>
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-    
+
     @if (session('success'))
-        <p style="text-align: center;">
+        <p style="text-align: center; color: green;">
             {{ session('success') }}
         </p>
     @endif

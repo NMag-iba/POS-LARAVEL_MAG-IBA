@@ -38,8 +38,22 @@
             color: black;
             text-decoration: none;
         }
+
+        .delete-form {
+            display: inline;
+        }
+
+        .delete-button {
+            border: none;
+            background: none;
+            color: red;
+            cursor: pointer;
+            padding: 0;
+            font-size: 14px;
+        }
     </style>
 </head>
+
 <body>
 
     <h1>Customer Accounts</h1>
@@ -47,8 +61,28 @@
     <nav>
         <a href="{{ route('home') }}">Home</a>
         <a href="{{ route('about') }}">About</a>
-        <a href="{{ route('customers') }}">Customer Accounts</a>
-        <a href="{{ route('users') }}">User Accounts</a>
+        <a href="{{ route('customers.index') }}">Customer Accounts</a>
+        <a href="{{ route('users.index') }}">User Accounts</a>
+        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+        @csrf
+
+        <button
+            type="submit"
+            style="
+                margin-left: 10px;
+                border: none;
+                background: none;
+                color: #0000ee;
+                text-decoration: underline;
+                cursor: pointer;
+                font-size: 16px;
+                font-family: inherit;
+                font-size: inherit;
+            "
+        >
+            Log Out
+        </button>
+    </form>
     </nav>
 
     <a class="add-customer" href="{{ route('customers.create') }}">
@@ -71,8 +105,36 @@
                     <td>{{ $customer->full_name }}</td>
                     <td>{{ $customer->email }}</td>
                     <td>{{ $customer->phone }}</td>
+
                     <td>
-                        <a href="{{ route('customers.edit', $customer) }}">Edit</a>
+                        <a href="{{ route('customers.show', $customer) }}">
+                            View
+                        </a>
+
+                        |
+
+                        <a href="{{ route('customers.edit', $customer) }}">
+                            Edit
+                        </a>
+
+                        |
+
+                        <form
+                            class="delete-form"
+                            method="POST"
+                            action="{{ route('customers.destroy', $customer) }}"
+                        >
+                            @csrf
+                            @method('DELETE')
+
+                            <button
+                                class="delete-button"
+                                type="submit"
+                                onclick="return confirm('Delete this customer?')"
+                            >
+                                Delete
+                            </button>
+                        </form>
                     </td>
                 </tr>
             @endforeach
@@ -80,7 +142,7 @@
     </table>
 
     @if (session('success'))
-        <p style="text-align: center;">
+        <p style="text-align: center; color: green;">
             {{ session('success') }}
         </p>
     @endif

@@ -72,8 +72,28 @@
     <nav>
         <a href="{{ route('home') }}">Home</a>
         <a href="{{ route('about') }}">About</a>
-        <a href="{{ route('customers') }}">Customer Accounts</a>
-        <a href="{{ route('users') }}">User Accounts</a>
+        <a href="{{ route('customers.index') }}">Customer Accounts</a>
+        <a href="{{ route('users.index') }}">User Accounts</a>
+                <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+        @csrf
+
+        <button
+            type="submit"
+            style="
+                margin-left: 10px;
+                border: none;
+                background: none;
+                color: #0000ee;
+                text-decoration: underline;
+                cursor: pointer;
+                font-size: 16px;
+                font-family: inherit;
+                font-size: inherit;
+            "
+        >
+            Log Out
+        </button>
+    </form>
     </nav>
 
     <form method="POST" action="{{ route('users.store') }}">
@@ -127,7 +147,7 @@
         <div class="form-actions">
             <button type="submit">Save User</button>
 
-            <a class="back-button" href="{{ route('users') }}">
+            <a class="back-button" href="{{ route('users.index') }}">
                 Return
             </a>
         </div>
